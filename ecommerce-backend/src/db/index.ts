@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 
+const uri :string = process.env.UID!
+
 const connect = async()=>{
 try {
-    const connectionInstance = await  mongoose.connect("mongodb+srv://moiz:moiz2023@cluster0.v6c4fyb.mongodb.net/ecommerce" )
+    const connectionInstance = await  mongoose.connect(uri)
     console.log(`mongoose connection successfully on ${connectionInstance.connection.host}`)
 } catch (error) {
     console.log(error)

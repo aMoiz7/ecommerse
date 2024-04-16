@@ -5,7 +5,6 @@ import { ApiResponse } from "../utils/apiResponse.js";
 const newUser = asyncHandler(async (req, res, next) => {
     try {
         const { _id, email, name, gender, dob } = req.body;
-        console.log(dob);
         if (!_id || !email || !name || !gender || !dob) {
             throw new ApiError(400, "all feild are requied ");
         }

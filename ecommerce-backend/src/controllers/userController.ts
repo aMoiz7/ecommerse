@@ -5,10 +5,10 @@ import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 
 const newUser = asyncHandler(
+   
   async (req: Request, res: Response ,  next: NextFunction) => {
    try {
      const { _id , email, name, gender, dob } =req.body;
-     console.log(dob)
 
 
      if(!_id || !email || !name || !gender || !dob){
@@ -21,7 +21,9 @@ const newUser = asyncHandler(
         res.status(200).json(new ApiResponse(201 , `welcome ${existingUser.name}` , "user login" ))
      }
 
+
      const Newuser = await user.create({ _id , email, name, gender, dob:new Date(dob)});
+
 
      res.status(200).json(new ApiResponse(201 , Newuser , "user created successfully"))
 

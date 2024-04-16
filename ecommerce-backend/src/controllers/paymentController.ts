@@ -1,8 +1,23 @@
+import { stripe } from "../app.js";
 import { couponSchema } from "../models/coupons.js";
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
+
+export const createPaymentIntent =asyncHandler( async (req,res,next) =>{
+  const {amount} = req.body;
+
+  if(!amount)throw new ApiError(400 , "amount not found");
+
+  const paymentIntent = stripe.paymentIntents.create({amount :Number(amount)*100 , currency: "inr"})
+
+  return res.status(201).json({
+    success: true,
+    clientSecret: (await paymentIntent).client_secret,
+  });
+
+})
 
 export const newCoupon = asyncHandler(async(req,res,next)=>{
     const {code ,amount} = req.body;
