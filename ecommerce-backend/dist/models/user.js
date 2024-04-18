@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     },
     photo: { type: String },
     role: { type: String, enum: ["admin", "user"], default: "user" },
-    gender: { type: String, enum: ["male", "female"], require: true },
+    gender: { type: String, enum: ["Male", "Female"], require: true },
     dob: { type: Date, require: true },
 }, { timestamps: true });
 userSchema.virtual("age").get(function () {

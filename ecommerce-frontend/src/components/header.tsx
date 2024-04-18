@@ -8,12 +8,9 @@ import {
 } from "react-icons/fa";
 import { useState } from "react";
 
-const User = {
-  _id: "12345",
-  role: "admin",
-};
 
-const header = () => {
+
+const header = ({user}:any|null) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const logoutHandler =()=>{
@@ -31,7 +28,7 @@ const header = () => {
       <Link onClick={() => setIsOpen(false)} to={"/cart"}>
         <FaShoppingBag />
       </Link>
-      {User?._id ? (
+      {user?._id ? (
         <>
           <button onClick={() => setIsOpen((prev) => !prev)}>
             <FaUser />
@@ -39,7 +36,7 @@ const header = () => {
           <dialog open={isOpen}>
             <div>
               {" "}
-              {User.role === "admin" && (
+              {user.role === "admin" && (
                 <Link to={"/admin/dashboard"}>Admin</Link>
               )}{" "}
               <Link to="/orders">Orders</Link>{" "}

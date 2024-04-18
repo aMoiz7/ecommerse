@@ -6,7 +6,7 @@ interface Iuser extends Document{
     name: string;
     photo : string;
     role: "admin" | "user";
-    gender: "male" | "female";
+    gender: "Male" | "Female";
     dob: Date;
     createdAt :Date;
     updatedAt:Date;
@@ -30,7 +30,7 @@ require :true
 },
 photo:{type:String  },
 role:{type:String , enum:["admin","user"] , default:"user"},
-gender:{type:String , enum:["male","female"] , require:true},
+gender:{type:String , enum:["Male","Female"] , require:true},
 dob:{type:Date , require:true},
 
 },{timestamps:true})

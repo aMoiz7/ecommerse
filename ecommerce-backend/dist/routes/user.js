@@ -4,5 +4,5 @@ import { isAdmin } from "../middlewares/isadmin.js";
 const router = Router();
 router.route("/login").post(newUser);
 router.route("/alluser").post(allUser);
-router.route("/:userid").get(isAdmin, getuser).delete(isAdmin, deleteuser);
+router.route("/:userid").get(getuser).delete(isAdmin, deleteuser);
 export default router;

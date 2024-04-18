@@ -3,6 +3,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { GoogleAuthProvider , signInWithPopup  } from 'firebase/auth';
 import { auth } from '../firebase';
 import { loginapi } from '../api/userapi';
+import Cookies from 'js-cookie';
 
 
 const login = () => {
@@ -15,19 +16,30 @@ const login = () => {
     const loginhandler = async()=>{
       const googleprovider = new GoogleAuthProvider();
       const {user} = await signInWithPopup(auth , googleprovider)
+      console.log(user , "firebase")
+      const accessToken = await user.getIdToken();
+
+      console.log('Access token:', accessToken);
+      Cookies.set("accessToken" ,accessToken)
+
       
       if (user) {
-        const userRes = {
-          _id: '123',
+
+  
+        const newuser = await loginapi({
+          _id: user.uid,
           email: user.email,
           name: user.displayName,
           photo: user.photoURL,
           role: 'user',
-          gender: 'male', // Example value, replace with actual gender
-          dob: '1988-10-02', // Example value, replace with actual date of birth
-        };
-  
-        const newuser = await loginapi(userRes);
+          gender: gender, // Example value, replace with actual gender
+          dob: date, // Example value, replace with actual date of birth
+        });
+        return newuser
+      }else{
+        console.error("user not found");
+        
+        
       }
     }
 

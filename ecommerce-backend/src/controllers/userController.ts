@@ -11,9 +11,12 @@ const newUser = asyncHandler(
      const { _id , email, name, gender, dob } =req.body;
 
 
+
      if(!_id || !email || !name || !gender || !dob){
         throw new ApiError(400 , "all feild are requied " )
      }
+
+
 
      const existingUser = await  user.findOne({$or:[{_id , email}]});
 
@@ -28,6 +31,7 @@ const newUser = asyncHandler(
      res.status(200).json(new ApiResponse(201 , Newuser , "user created successfully"))
 
    } catch (error:any) {
+      console.log(error,"error")
     next(new ApiError(401, "error in creating new user ", error));}
   }
 );

@@ -1,13 +1,20 @@
 import { BrowserRouter as Router , Route , Routes } from 'react-router-dom'
-import { lazy ,Suspense } from 'react';
+import { lazy ,Suspense, useEffect } from 'react';
 import Loader from './components/loader';
 import Header from "./components/header"
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase';
+import { getuser } from './api/userapi';
+import { useDispatch, useSelector } from 'react-redux';
+import { userExist } from './store/userslice';
+import { RootState } from './store/store';
 const Home = lazy(()=> import("./pages/home"))
 const Search = lazy(()=> import("./pages/search"))
 const Cart = lazy(()=> import("./pages/cart"))
 const Shipping = lazy(()=> import("./pages/shipping"))
 const Login = lazy(()=> import("./pages/login"))
 const Orders = lazy(()=> import("./pages/orders"))
+import Auth from './components/auth';
 
 
 
@@ -33,24 +40,45 @@ const TransactionManagement = lazy(
 
 
 
-//
 
 
 
 const App = () => {
+
+  const { user, loading } = useSelector(
+    (state: RootState) => state.userReducer
+  );
+
+  console.log(loading,"hihih")
+
+  const dispath = useDispatch()
+useEffect(() => {
+  onAuthStateChanged(auth, async(user)=>{
+    if(user){
+     
+    const userdata = await getuser(user.uid)
+      dispath(userExist(userdata!.data.data))
+    }
+  })
+},[]
+)
+
+
+
+
   return (
    <Router>
-   <Header/>
+   <Header user={user}/>
  <Suspense fallback={<Loader/>}> 
  <Routes>
       <Route path='/' element={<Home/>}/>
       <Route path='/search' element={<Search/>}/>
       <Route path='/cart' element={<Cart/>}/>
-      <Route path='/login' element={<Login/>}/>
 
 
+      <Route path='/login' element={<Auth isAuth ={user?false : true}><Login/></Auth>}/>
       //protected Route
-      <Route>
+      <Route element={<Auth isAuth ={user?false : true}><Login/></Auth>}>
 
       <Route path="/shipping" element={<Shipping/>} />
       <Route path="/orders" element={<Orders/>} />
@@ -62,9 +90,9 @@ const App = () => {
       //admin 
 
       <Route
-  // element={
-  //   <ProtectedRoute isAuthenticated={true} adminRoute={true} isAdmin={true} />
-  // }
+  element={
+    <Auth isAuth={true} adminOnly={true} admin={true} />
+  }
 >
   <Route path="/admin/dashboard" element={<Dashboard />} />
   <Route path="/admin/product" element={<Products />} />

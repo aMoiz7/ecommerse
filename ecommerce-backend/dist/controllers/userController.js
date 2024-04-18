@@ -16,6 +16,7 @@ const newUser = asyncHandler(async (req, res, next) => {
         res.status(200).json(new ApiResponse(201, Newuser, "user created successfully"));
     }
     catch (error) {
+        console.log(error, "error");
         next(new ApiError(401, "error in creating new user ", error));
     }
 });
