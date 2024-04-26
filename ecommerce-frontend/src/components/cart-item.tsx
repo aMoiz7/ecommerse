@@ -16,7 +16,7 @@ quantity} = cartitems
 
   return (
     <div className="cart-item">
-        <img src={photo} alt={name}></img>
+        <img src={`http://localhost:8000/${photo}`} alt={name}></img>
         <article>
             <Link to={`/product/${productId}`}>{name}</Link>
             <span>Rs.{price}</span>

@@ -1,13 +1,49 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState , FormEvent } from "react";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
+import { useSelector } from "react-redux";
+import { User } from "../../../types/types";
+import { useNewProductMutation } from "../../../store/reduxapi/productapi";
+import { responseToast } from './../../../utils/features';
+import { useNavigate } from "react-router-dom";
 
 const NewProduct = () => {
+
+  const {user } = useSelector((state:any)=>state.userReducer)
+
+  const [newproduct] = useNewProductMutation()
+  const navigate = useNavigate()
+ 
+
+
+
   const [name, setName] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [price, setPrice] = useState<number>(1000);
   const [stock, setStock] = useState<number>(1);
   const [photoPrev, setPhotoPrev] = useState<string>("");
   const [photo, setPhoto] = useState<File>();
+
+
+  const submithandler= async (e:FormEvent<HTMLFormElement>)=>{
+    e.preventDefault();
+     if(!name || !price || !stock || !category || !photo ){
+return;
+     }
+
+     const formData = new FormData()
+     formData.set("name", name)
+     formData.set("price", price.toString())
+     formData.set("stock", stock.toString())
+     formData.set("category", category)
+     formData.set("photo",photo)
+
+     const res = await newproduct({id:user?._id! , formData })
+     console.log(res)
+
+     responseToast(res,navigate , "/admin/product")
+
+    }
+
 
   const changeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
@@ -30,7 +66,7 @@ const NewProduct = () => {
       <AdminSidebar />
       <main className="product-management">
         <article>
-          <form>
+          <form onSubmit={submithandler}>
             <h2>New Product</h2>
             <div>
               <label>Name</label>

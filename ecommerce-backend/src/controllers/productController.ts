@@ -42,9 +42,10 @@ if([name , price , stock , category].some((f)=>f?.trim()==="")){
     if(!newProduct){
         throw new ApiError(400 , "failed to create new product")
     }
-      await invalidateCache({product:true})
+    invalidateCache({ product: true, admin: true });
      return res.status(200).json(new ApiResponse(200 ,newProduct ,"product added successfully" ))
 } catch (error:any) {
+    console.log(error)
     if(ProductPhotoLocation)
     fs.unlinkSync(ProductPhotoLocation)
     next( new ApiError(error))
@@ -169,17 +170,15 @@ const adminallproduct = asyncHandler(async(req,res,next)=>{
 const singleProduct =asyncHandler(async(req,res)=>{
  const id = req.params.id;
 
-
- let singleproduct; 
-
-    if(myCache.has(`product-${id}`)){
-        singleproduct = JSON.parse(myCache.get(`product-${id}`)as string)
-    }
-    else{
-        singleproduct = await product.findById(id)
-        if(!id)throw new ApiError(400, "product id not fount");
-        myCache.set(`product-${id}` , JSON.stringify(`product-${id}`))
-    }
+ if(!id) throw new ApiError(400, "product id not found");
+ let singleproduct
+ if(myCache.has(`product-${id}`)){
+   singleproduct = JSON.parse(myCache.get(`product-${id}`) as string);
+ } else {
+   singleproduct = await product.findById(id);
+   myCache.set(`product-${id}`, JSON.stringify(singleproduct));
+}
+ 
 
     
  if(!singleproduct)throw new ApiError(400, "product  not fount");

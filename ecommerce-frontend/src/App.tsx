@@ -91,7 +91,7 @@ useEffect(() => {
 
       <Route
   element={
-    <Auth isAuth={true} adminOnly={true} admin={true} />
+    <Auth isAuth={true} adminOnly={false} admin={false} />
   }
 >
   <Route path="/admin/dashboard" element={<Dashboard />} />

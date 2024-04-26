@@ -32,11 +32,14 @@ const Port = 8000;
 export const myCache = new NodeCache()
  app.use(express.urlencoded({ extended: true }));
  app.use(express.json())
+ app.use("/public", express.static("public"));
+
 
 app.use("/api/v1/user" , userRoutes )
 app.use("/api/v1/product" , productRoute )
 app.use("/api/v1/order" , orderRoutes )
 app.use("/api/v1/dashboard" , adminDash )
+
 
 
 
